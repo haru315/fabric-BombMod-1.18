@@ -38,6 +38,8 @@ public class BombMod implements ModInitializer {
     public static final Block SUPER_NUCLEAR_BOMB = new SuperNuclearBomb(FabricBlockSettings.of(Material.METAL).strength(4.0f));
 
     public static final Block NOVA_BLOCK = new NovaBlock(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+    public static final Block SUPER_NOVA_BLOCK = new SuperNovaBlock(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+
 
     // エンティティ登録
     // TNT_x
@@ -121,5 +123,7 @@ public class BombMod implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "nova_bomb"), NOVA_BLOCK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "nova_bomb"), new BlockItem(NOVA_BLOCK, new FabricItemSettings().group(ModItemGroup.BOMB_GROUP)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "super_nova_bomb"), SUPER_NOVA_BLOCK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "super_nova_bomb"), new BlockItem(SUPER_NOVA_BLOCK, new FabricItemSettings().group(ModItemGroup.BOMB_GROUP)));
     }
 }
