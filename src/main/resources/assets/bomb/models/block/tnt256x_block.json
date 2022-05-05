@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "bomb:block/tnt256x_top",
+    "bottom": "bomb:block/tnt256x_bottom",
+    "side": "bomb:block/tnt256x_side"
+  }
+}

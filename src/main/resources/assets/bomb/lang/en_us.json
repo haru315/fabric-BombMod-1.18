@@ -1,0 +1,16 @@
+{
+  "block.bomb.tnt4x_block": "4x TNT",
+  "block.bomb.tnt16x_block": "16x TNT",
+  "block.bomb.tnt64x_block": "64x TNT",
+  "block.bomb.tnt256x_block": "256x TNT",
+  "block.bomb.tnt1024x_block": "1024x TNT",
+  "block.bomb.tnt4096x_block": "4096x TNT",
+  "block.bomb.tnt16384x_block": "16384x TNT",
+
+  "block.bomb.nuclear_bomb": "Nuclear Bomb",
+  "block.bomb.super_nuclear_bomb": "Super Nuclear Bomb",
+
+  "block.bomb.nova_bomb": "Nova",
+
+  "itemGroup.bomb.bomb_mod": "Bomb Mod"
+}

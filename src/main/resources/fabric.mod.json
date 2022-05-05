@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "bomb",
+  "version": "${version}",
+  "name": "Bomb Mod",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/bomb/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.fabricmc.bomb.client.BombClient"
+    ],
+    "main": [
+      "net.fabricmc.bomb.BombMod"
+    ]
+  },
+  "mixins": [
+    "bomb.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}

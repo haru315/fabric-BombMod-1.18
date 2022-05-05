@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "bomb:block/super_nuclear_bomb_top",
+    "bottom": "bomb:block/super_nuclear_bomb_bottom",
+    "side": "bomb:block/super_nuclear_bomb_side"
+  }
+}
