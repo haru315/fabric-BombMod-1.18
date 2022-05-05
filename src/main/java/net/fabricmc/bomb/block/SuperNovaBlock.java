@@ -1,6 +1,7 @@
 package net.fabricmc.bomb.block;
 
 import net.fabricmc.bomb.entity.NovaEntity;
+import net.fabricmc.bomb.entity.SuperNovaEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -27,10 +28,10 @@ public class SuperNovaBlock extends BombBlock {
         if (world.isClient) {
             return;
         }
-//        NovaEntity entity = new NovaEntity(world, (double)pos.getX() + 0.5, pos.getY(), (double)pos.getZ() + 0.5, explosion.getCausingEntity());
-//        int i = entity.getFuse();
-//        entity.setFuse((short)(world.random.nextInt(i / 4) + i / 8));
-//        world.spawnEntity(entity);
+        SuperNovaEntity entity = new SuperNovaEntity(world, (double)pos.getX() + 0.5, pos.getY(), (double)pos.getZ() + 0.5, explosion.getCausingEntity());
+        int i = entity.getFuse();
+        entity.setFuse((short)(world.random.nextInt(i / 4) + i / 8));
+        world.spawnEntity(entity);
     }
 
     @Override
@@ -38,9 +39,9 @@ public class SuperNovaBlock extends BombBlock {
         if (world.isClient) {
             return;
         }
-//        NovaEntity entity = new NovaEntity(world, (double)pos.getX() + 0.5, pos.getY(), (double)pos.getZ() + 0.5, igniter);
-//        world.spawnEntity(entity);
-//        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0f, 1.0f);
-//        world.emitGameEvent((Entity)igniter, GameEvent.PRIME_FUSE, pos);
+        SuperNovaEntity entity = new SuperNovaEntity(world, (double)pos.getX() + 0.5, pos.getY(), (double)pos.getZ() + 0.5, igniter);
+        world.spawnEntity(entity);
+        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.emitGameEvent((Entity)igniter, GameEvent.PRIME_FUSE, pos);
     }
 }

@@ -98,6 +98,12 @@ public class BombMod implements ModInitializer {
             FabricEntityTypeBuilder.<NovaEntity>create(SpawnGroup.CREATURE, NovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
 
+    public static final EntityType<SuperNovaEntity> SUPER_NOVA_BOMB_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(MOD_ID, "super_nova_bomb_entity"),
+            FabricEntityTypeBuilder.<SuperNovaEntity>create(SpawnGroup.CREATURE, SuperNovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+    );
+
 
     @Override
     public void onInitialize() {

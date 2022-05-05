@@ -48,5 +48,9 @@ public class BombClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(BombMod.NOVA_BOMB_ENTITY, (context) -> {
             return new NovaEntityRenderer(context);
         });
+        //SuperNovaBombs
+        EntityRendererRegistry.INSTANCE.register(BombMod.SUPER_NOVA_BOMB_ENTITY, (context) -> {
+            return new SuperNovaEntityRenderer(context);
+        });
     }
 }
