@@ -31,7 +31,7 @@ public class HyperNovaEntity extends BombEntity {
     @Override
     protected void explode() {
         BigExplosion explosion = new BigExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
-        explosion.setCreateFire(true);
+        explosion.setCreateFire(false);
         explosion.ExplosionB();
     }
 }

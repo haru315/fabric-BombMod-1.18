@@ -8,11 +8,15 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 import java.util.HashSet;
@@ -24,6 +28,7 @@ public class BigExplosion extends BombExplosion {
     protected int mode = 0;
     protected float attenuationVar1 = 0.22500001f;
     protected float attenuationVar2 = 0.3F;
+    protected boolean particles = true;
 
     public BigExplosion(World world, Entity entity, double x, double y, double z, float power) {
         super(world,entity, x, y, z, power);
@@ -80,7 +85,10 @@ public class BigExplosion extends BombExplosion {
         this.mode = 0;
         this.attenuationVar1 = 0.22500001F;
         this.attenuationVar2 = 0.3F;
-        this.Explosion(i);
+        this.effect();
+        if (!this.world.isClient) {
+            this.Explosion(i);
+        }
     }
 
     //
@@ -89,7 +97,10 @@ public class BigExplosion extends BombExplosion {
         this.mode = 1;
         this.attenuationVar1 = 0.275F;
         this.attenuationVar2 = 0.45F;
-        this.Explosion(i);
+        this.effect();
+        if (!this.world.isClient) {
+            this.Explosion(i);
+        }
     }
 
     //
@@ -151,6 +162,20 @@ public class BigExplosion extends BombExplosion {
                 if (this.world.getBlockState(blockPos3.down()).isOpaqueFullCube(this.world, blockPos3.down())) {
                     this.world.setBlockState(blockPos3, AbstractFireBlock.getState(this.world, blockPos3));
                 }
+            }
+        }
+    }
+
+    // エフェクト・パーティクル
+    public void effect(){
+        if (this.world.isClient) {
+            this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2f) * 0.7f, false);
+        }
+        if (particles) {
+            if (this.power > 2.0f) {
+                this.world.addParticle(ParticleTypes.EXPLOSION, this.x, this.y, this.z, 1.0, 0.0, 0.0);
+            } else {
+                this.world.addParticle(ParticleTypes.EXPLOSION_EMITTER, this.x, this.y, this.z, 1.0, 0.0, 0.0);
             }
         }
     }

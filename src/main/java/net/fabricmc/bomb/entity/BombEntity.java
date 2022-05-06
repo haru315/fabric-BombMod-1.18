@@ -53,10 +53,8 @@ public class BombEntity extends Entity {
         int i = this.getFuse() - 1;
         this.setFuse(i);
         if (i <= 0) {
+            this.explode();
             this.discard();
-            if (!this.world.isClient) {
-                this.explode();
-            }
         } else {
             this.updateWaterState();
             if (this.world.isClient) {
