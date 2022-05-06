@@ -39,6 +39,7 @@ public class BombMod implements ModInitializer {
 
     public static final Block NOVA_BLOCK = new NovaBlock(FabricBlockSettings.of(Material.METAL).strength(4.0f));
     public static final Block SUPER_NOVA_BLOCK = new SuperNovaBlock(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+    public static final Block HYPER_NOVA_BLOCK = new HyperNovaBlock(FabricBlockSettings.of(Material.METAL).strength(4.0f));
 
 
     // エンティティ登録
@@ -97,11 +98,15 @@ public class BombMod implements ModInitializer {
             new Identifier(MOD_ID, "nova_bomb_entity"),
             FabricEntityTypeBuilder.<NovaEntity>create(SpawnGroup.CREATURE, NovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
-
     public static final EntityType<SuperNovaEntity> SUPER_NOVA_BOMB_ENTITY = Registry.register(
             Registry.ENTITY_TYPE,
             new Identifier(MOD_ID, "super_nova_bomb_entity"),
             FabricEntityTypeBuilder.<SuperNovaEntity>create(SpawnGroup.CREATURE, SuperNovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+    );
+    public static final EntityType<HyperNovaEntity> HYPER_NOVA_BOMB_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(MOD_ID, "hyper_nova_bomb_entity"),
+            FabricEntityTypeBuilder.<HyperNovaEntity>create(SpawnGroup.CREATURE, HyperNovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
 
 
@@ -131,5 +136,7 @@ public class BombMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "nova_bomb"), new BlockItem(NOVA_BLOCK, new FabricItemSettings().group(ModItemGroup.BOMB_GROUP)));
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "super_nova_bomb"), SUPER_NOVA_BLOCK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "super_nova_bomb"), new BlockItem(SUPER_NOVA_BLOCK, new FabricItemSettings().group(ModItemGroup.BOMB_GROUP)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hyper_nova_bomb"), HYPER_NOVA_BLOCK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hyper_nova_bomb"), new BlockItem(HYPER_NOVA_BLOCK, new FabricItemSettings().group(ModItemGroup.BOMB_GROUP)));
     }
 }

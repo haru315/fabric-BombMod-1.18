@@ -12,6 +12,7 @@
 
   "block.bomb.nova_bomb": "Nova",
   "block.bomb.super_nova_bomb": "Super Nova",
+  "block.bomb.hyper_nova_bomb": "Hyper Nova",
 
   "itemGroup.bomb.bomb_mod": "Bomb Mod"
 }
