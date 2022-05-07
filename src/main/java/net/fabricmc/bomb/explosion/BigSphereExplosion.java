@@ -116,8 +116,8 @@ public class BigSphereExplosion extends BombExplosion {
     public void ExplosionB(){
         int i = (int)(4 * Math.PI * Math.pow(this.power,2));
         this.mode = 1;
-        this.attenuationVar1 = 0.275F;
-        this.attenuationVar2 = 0.45F;
+        this.attenuationVar1 = 0.5F;
+        this.attenuationVar2 = 0.5F;
         this.effect();
         if (!this.world.isClient) {
             this.Explosion(i);
@@ -130,9 +130,15 @@ public class BigSphereExplosion extends BombExplosion {
         long lastUpdate = System.currentTimeMillis();
         Set<BlockPos> set = Sets.newHashSet();
 
-        for(double[] gss :generateGss(smoothness)){
-            double[] pos = spherical2cartesian(gss[0],gss[1]);
+        double[][] gss = generateGss(smoothness);
+        for(int i = 0; i < gss.length ; i++){
+            double[] pos = spherical2cartesian(gss[i][0],gss[i][1]);
             set = makeRay(pos[0], pos[2], pos[1], set);
+
+            if(System.currentTimeMillis() - lastUpdate > 10000L) {
+                lastUpdate = System.currentTimeMillis();
+                System.out.println("Gss directed ray: [" + i + "/" + smoothness + "]");
+            }
         }
 
         int size = set.size();
