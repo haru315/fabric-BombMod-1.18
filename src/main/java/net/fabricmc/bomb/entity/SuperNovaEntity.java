@@ -7,7 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class SuperNovaEntity extends BombEntity {
+public class SuperNovaEntity extends NovaEntity {
 
     protected float size;
 
@@ -26,12 +26,5 @@ public class SuperNovaEntity extends BombEntity {
         this.prevY = y;
         this.prevZ = z;
         this.causingEntity = igniter;
-    }
-
-    @Override
-    protected void explode() {
-        BigExplosion explosion = new BigExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
-        explosion.setCreateFire(true);
-        explosion.ExplosionB();
     }
 }
