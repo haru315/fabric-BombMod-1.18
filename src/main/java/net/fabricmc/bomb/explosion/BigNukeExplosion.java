@@ -11,84 +11,85 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 import java.util.Optional;
 import java.util.Set;
 
 public class BigNukeExplosion extends BombExplosion {
-    protected int mode = 0;
     protected float size;
-    protected float attenuationVar1 = 0.22500001f;
-    protected float attenuationVar2 = 0.3F;
     protected boolean particles = true;
+
+    protected float densitySphere = 1.0F;
+    protected float densityRay = 0.5F;
+
+    int gss_num_max;
+    int gss_num;
+    double gss_x;
+    double gss_y;
 
     public BigNukeExplosion(World world, Entity entity, double x, double y, double z, float power, float size) {
         super(world,entity, x, y, z, power);
         this.size = size;
     }
 
-    // 一般化螺旋集合を生成する
-    private double[][] generateGss(int n){
-        double[][] gss = new double[n][2];
-        // 天底の点の座標を代入
-        gss[0][0] = Math.PI;
-        gss[0][1] = 0.0;
+    private void resetGss(){
+        // 点の総数
+        this.gss_num_max = (int)(4 * Math.PI * Math.pow(this.size,2) * this.densitySphere);
+        this.gss_num = 1;
 
-        for (int i=1; i < n; i++){
-            int k = i + 1;
-            double hk = -1.0 + 2.0 * (k - 1.0) / (n - 1.0);
-            gss[i][0] = Math.acos(hk);
+        // 一般化螺旋集合のはじまり
+        this.gss_x = Math.PI;
+        this.gss_y = 0.0;
+    }
 
-            double prev_lon = gss[i - 1][1];
-            double lon = prev_lon + 3.6 / Math.sqrt(n) / Math.sqrt(1.0 - hk * hk);
-            gss[i][1] = lon % (Math.PI * 2);
+    // 一般化螺旋集合を一つ進める
+    private void generateGssUp(){
+        if (this.gss_num < this.gss_num_max) {
+            int k = this.gss_num + 1;
+            double hk = -1.0 + 2.0 * (k - 1.0) / (this.gss_num_max - 1.0);
+            this.gss_x = Math.acos(hk);
+
+            double prev_lon = this.gss_y;
+            double lon = prev_lon + 3.6 / Math.sqrt(this.gss_num_max) / Math.sqrt(1.0 - hk * hk);
+            this.gss_y = lon % (Math.PI * 2);
+        } else {
+            this.gss_x = 0.0;
+            this.gss_y = 0.0;
         }
-        // 天頂の点の座標を代入
-        gss[n - 1][0] = 0.0;
-        gss[n - 1][1] = 0.0;
-
-        return gss;
+        this.gss_num++;
     }
 
-    //球面座標を直交座標に変換する
-    private double[] spherical2cartesian(double col, double lon){
-        double d0 = Math.sin(col) * Math.cos(lon);
-        double d1 = Math.sin(col) * Math.sin(lon);
-        double d2 = Math.cos(col);
-        return new double[]{d0, d1, d2};
-    }
-
-
-    private Set makeRay(double d0, double d1, double d2, Set set)
+    //　レイを飛ばす
+    private Set makeRay(double dx,double dy,double dz,Set set)
     {
-        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-        d0 /= d3;
-        d1 /= d3;
-        d2 /= d3;
-        float f0 = this.power;
-        double d4 = this.x;
-        double d6 = this.y;
-        double d8 = this.z;
-        BlockPos blockPos = new BlockPos(d4, d6, d8);
-        for(float f1 = 0;(f1 < this.size && f0 > 0.0F); f1 += this.attenuationVar1)
-        {
-            blockPos = new BlockPos(d4, d6, d8);
-            BlockState blockState = world.getBlockState(blockPos);
+        int length = (int)Math.ceil(this.size);
+
+        float res = this.power;
+
+        BlockPos blockPos;
+
+        for(float i = 0; i < length; i += this.densityRay) {
+            float x0 = (float) (this.x + (dx * i));
+            float y0 = (float) (this.y + (dy * i));
+            float z0 = (float) (this.z + (dz * i));
+
+            blockPos = new BlockPos(x0, y0, z0);
+            BlockState blockState = this.world.getBlockState(blockPos);
             FluidState fluidState = this.world.getFluidState(blockPos);
 
-            double fac = 100 - ((double) f1) / ((double) this.size) * 100;
+            double fac = 100 - ((double) i) / ((double) length) * 100;
             fac *= 0.07D;
 
-            if(blockState.getMaterial() != Material.AIR)
-            {
-                if(!blockState.getMaterial().isLiquid()) {
+            if(blockState.getMaterial() != Material.AIR) {
+                if (!blockState.getMaterial().isLiquid()) {
                     Optional<Float> optional = DEFAULT_BEHAVIOR.getBlastResistance(null, this.world, blockPos, blockState, fluidState);
                     if (optional.isPresent()) {
-                        f0 -= Math.pow(optional.get().floatValue(), 7.5D - fac);;
+                        res -= Math.pow(optional.get(), 7.5D - fac) * this.densityRay;
                     }
                 }
-                if(f0 > 0.0F){
+                if(res > 0.0F){
                     set.add(blockPos);
                 }
             }else if (this.createFire){
@@ -96,42 +97,35 @@ public class BigNukeExplosion extends BombExplosion {
                     set.add(blockPos);
                 }
             }
-
-            d4 += d0 * (double)this.attenuationVar2;
-            d6 += d1 * (double)this.attenuationVar2;
-            d8 += d2 * (double)this.attenuationVar2;
         }
         return set;
     }
 
-    //BigNukeExplosion
-    public void Explosion(){
-        int i = (int)(4 * Math.PI * Math.pow(this.size,2));
-        this.mode = 0;
-        this.attenuationVar1 = 0.3F;
-        this.attenuationVar2 = 0.3F;
-        this.effect();
-        if (!this.world.isClient) {
-            this.Explosion(i);
-        }
-    }
-
-
     //
-    public void Explosion(int smoothness){
+    public void process(){
         long start = System.currentTimeMillis();
         long lastUpdate = System.currentTimeMillis();
         Set<BlockPos> set = Sets.newHashSet();
 
-        double[][] gss = generateGss(smoothness);
-        for(int i = 0; i < gss.length ; i++){
-            double[] pos = spherical2cartesian(gss[i][0],gss[i][1]);
-            set = makeRay(pos[0], pos[2], pos[1], set);
+        // 一般化螺旋集合をリセット
+        this.resetGss();
+        System.out.println("Gss start ray: [" + this.gss_num_max + "]");
 
+        while (this.gss_num_max >= this.gss_num) {
+            //球面座標を直交座標に変換する
+            double dx = Math.sin(this.gss_x) * Math.cos(this.gss_y);
+            double dz = Math.sin(this.gss_x) * Math.sin(this.gss_y);
+            double dy = Math.cos(this.gss_x);
+
+            set = this.makeRay(dx,dy,dz,set);
+
+            // 経過表示
             if(System.currentTimeMillis() - lastUpdate > 10000L) {
                 lastUpdate = System.currentTimeMillis();
-                System.out.println("Gss directed ray: [" + i + "/" + smoothness + "]");
+                System.out.println("Gss directed ray: [" + this.gss_num + "/" + this.gss_num_max + "]");
             }
+            // 一般化螺旋集合を一個進める
+            this.generateGssUp();
         }
 
         int size = set.size();
@@ -148,6 +142,15 @@ public class BigNukeExplosion extends BombExplosion {
                     this.world.setBlockState(blockPos3, AbstractFireBlock.getState(this.world, blockPos3));
                 }
             }
+        }
+    }
+
+
+    //BigNukeExplosion
+    public void Explosion(){
+        this.effect();
+        if (!this.world.isClient) {
+            this.process();
         }
     }
 
