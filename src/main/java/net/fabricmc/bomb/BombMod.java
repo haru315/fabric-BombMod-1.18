@@ -3,6 +3,7 @@ package net.fabricmc.bomb;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.bomb.block.*;
 import net.fabricmc.bomb.entity.*;
+import net.fabricmc.bomb.entity.explosion.SphereExplosionEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -107,6 +108,13 @@ public class BombMod implements ModInitializer {
             Registry.ENTITY_TYPE,
             new Identifier(MOD_ID, "hyper_nova_bomb_entity"),
             FabricEntityTypeBuilder.<HyperNovaEntity>create(SpawnGroup.CREATURE, HyperNovaEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+    );
+
+    // Explosion Entity
+    public static final EntityType<SphereExplosionEntity> SPHEREE_EXPLOSION_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(MOD_ID, "sphere_explosion_entity"),
+            FabricEntityTypeBuilder.<SphereExplosionEntity>create(SpawnGroup.CREATURE, SphereExplosionEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
 
 
