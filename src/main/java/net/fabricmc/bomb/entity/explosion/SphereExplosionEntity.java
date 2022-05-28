@@ -2,6 +2,7 @@ package net.fabricmc.bomb.entity.explosion;
 
 import net.fabricmc.bomb.BombMod;
 import net.fabricmc.bomb.explosion.CircleMapGenerator;
+import net.fabricmc.bomb.explosion.SphereMapGenerator;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 public class SphereExplosionEntity extends Entity {
 
 
-    public CircleMapGenerator circleEN;
+    public SphereMapGenerator sphereMG;
     public int strength;
 
     public SphereExplosionEntity(World world) {
@@ -35,20 +36,20 @@ public class SphereExplosionEntity extends Entity {
 
     @Override
     public void tick() {
-        if (circleEN == null){
+        if (sphereMG == null){
             this.discard();
             return;
         }
-        for(int i=0;i<4;i++){
-            if (circleEN.getSize() > 100){
+        for(int i=0;i<16;i++){
+            if (sphereMG.getSize() > 100){
                 this.discard();
                 return;
             }
-            circleEN.sizeUp();
+            sphereMG.sizeUp();
 
-            for (CircleMapGenerator.Mass m : circleEN.getMass()){
-                BlockPos blockPos3 = new BlockPos((int)this.prevX+m.x, (int)this.prevY-1, (int)this.prevZ+m.y);
-                world.setBlockState(blockPos3, Blocks.STONE.getDefaultState());
+            for (SphereMapGenerator.Mass m : sphereMG.getMass()){
+                BlockPos blockPos3 = new BlockPos((int)this.prevX+m.x, (int)this.prevY+m.y, (int)this.prevZ+m.z);
+                world.setBlockState(blockPos3, Blocks.AIR.getDefaultState());
             }
         }
     }
@@ -56,7 +57,7 @@ public class SphereExplosionEntity extends Entity {
     public static SphereExplosionEntity statFac(World world, double x, double y, double z, int r) {
 
         SphereExplosionEntity mk4 = new SphereExplosionEntity(world);
-        mk4.circleEN = new CircleMapGenerator();
+        mk4.sphereMG = new SphereMapGenerator();
         mk4.setPosition(x, y, z);
         mk4.prevX = x;
         mk4.prevY = y;
