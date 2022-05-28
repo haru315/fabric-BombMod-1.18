@@ -1,24 +1,21 @@
 package net.fabricmc.bomb.entity.explosion;
 
 import net.fabricmc.bomb.BombMod;
-import net.fabricmc.bomb.explosion.ExplosionNukeRay;
+import net.fabricmc.bomb.explosion.CircleMapGenerator;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class SphereExplosionEntity extends Entity {
 
 
-    ExplosionNukeRay explosion;
+    public CircleMapGenerator circleEN;
     public int strength;
-    //How many rays should be created
-    public int count;
-    //How many rays are calculated per tick
-    public int speed;
-    public int length;
 
     public SphereExplosionEntity(World world) {
         this(BombMod.SPHEREE_EXPLOSION_ENTITY, world);
@@ -36,46 +33,30 @@ public class SphereExplosionEntity extends Entity {
         this.prevZ = z;
     }
 
-    long start;
-    long lastUpdate;
     @Override
     public void tick() {
-        if (strength == 0) {
-
+        if (circleEN == null){
             this.discard();
             return;
         }
-
-        if (explosion == null) {
-            explosion = new ExplosionNukeRay(this.world, (int) this.getX(), (int) this.getY(), (int) this.getZ(), this.strength, this.count, this.length);
-            start = System.currentTimeMillis();
-            lastUpdate = System.currentTimeMillis();
-        }
-        if (!explosion.isAusf3Complete) {
-            explosion.collectTipMk4_5(1024 * 10);
-
-            if(System.currentTimeMillis() - lastUpdate > 10000L) {
-                lastUpdate = System.currentTimeMillis();
-                System.out.println("GspNum: ["+explosion.getGspNum()+"/"+explosion.getGspNumMax()+"]");
+        for(int i=0;i<4;i++){
+            if (circleEN.getSize() > 100){
+                this.discard();
+                return;
             }
-        } else if (explosion.getStoredSize() > 0) {
-            explosion.processTip(1024);
+            circleEN.sizeUp();
 
-            if(System.currentTimeMillis() - lastUpdate > 10000L) {
-                lastUpdate = System.currentTimeMillis();
-                System.out.println("StoredSize: ["+explosion.getStoredSize() +"]");
+            for (CircleMapGenerator.Mass m : circleEN.getMass()){
+                BlockPos blockPos3 = new BlockPos((int)this.prevX+m.x, (int)this.prevY-1, (int)this.prevZ+m.y);
+                world.setBlockState(blockPos3, Blocks.STONE.getDefaultState());
             }
-        } else {
-            this.discard();
         }
     }
 
     public static SphereExplosionEntity statFac(World world, double x, double y, double z, int r) {
 
         SphereExplosionEntity mk4 = new SphereExplosionEntity(world);
-        mk4.strength = r;
-        mk4.count = (int)(2.5 * Math.PI * Math.pow(mk4.strength,2));
-        mk4.length = mk4.strength / 2;
+        mk4.circleEN = new CircleMapGenerator();
         mk4.setPosition(x, y, z);
         mk4.prevX = x;
         mk4.prevY = y;
