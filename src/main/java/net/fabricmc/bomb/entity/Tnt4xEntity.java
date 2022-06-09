@@ -1,11 +1,13 @@
 package net.fabricmc.bomb.entity;
 
 import net.fabricmc.bomb.BombMod;
+import net.fabricmc.bomb.entity.explosion.SphereExplosionEntity;
 import net.fabricmc.bomb.explosion.BigExplosion;
-import net.fabricmc.bomb.explosion.BigNukeExplosion;
-import net.fabricmc.bomb.explosion.BigSphereExplosion;
 import net.minecraft.entity.*;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class Tnt4xEntity  extends BombEntity {
@@ -34,10 +36,11 @@ public class Tnt4xEntity  extends BombEntity {
         BigExplosion explosion = new BigExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
         explosion.ExplosionA();
 
-//        BigSphereExplosion explosion = new BigSphereExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
-//        explosion.ExplosionA();
 
-//        BigNukeExplosion explosion = new BigNukeExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size*10.0F,this.size);
-//        explosion.Explosion();
+//        if (world.isClient) {
+//            return;
+//        }
+//        SphereExplosionEntity entity = SphereExplosionEntity.statFac(world,this.getX(),this.getY(),this.getZ(),100);
+//        world.spawnEntity(entity);
     }
 }

@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.bomb.BombMod;
 import net.fabricmc.bomb.client.Renderer.*;
+import net.fabricmc.bomb.client.Renderer.explosion.SphereExplosionRender;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 
 @Environment(EnvType.CLIENT)
@@ -55,6 +56,11 @@ public class BombClient implements ClientModInitializer {
         //HyperNovaBombs
         EntityRendererRegistry.INSTANCE.register(BombMod.HYPER_NOVA_BOMB_ENTITY, (context) -> {
             return new HyperNovaEntityRenderer(context);
+        });
+
+        // Explosion Entity
+        EntityRendererRegistry.INSTANCE.register(BombMod.SPHEREE_EXPLOSION_ENTITY, (context) -> {
+            return new SphereExplosionRender(context);
         });
     }
 }
