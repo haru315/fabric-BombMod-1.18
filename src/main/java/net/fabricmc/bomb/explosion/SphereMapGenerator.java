@@ -24,28 +24,19 @@ public class SphereMapGenerator {
         int z = this.currentMass.z;
 
         // 新しいマス
-        int ix = 0;
-        int iy = 0;
-        int iz = 0;
         if (y == 0 && z == 0){
-            ix = x+1;
-            this.addSphereMap(ix,0,0);
+            this.addSphereMap(x+1,0,0);
         }
         if (y == 0 && x > z){
-            ix = x;
-            iz = z+1;
-            this.addSphereMap(ix,0,iz);
+            this.addSphereMap(x,0,z+1);
         }
         if (z > y){
-            ix = x;
-            iz = z;
-            iy = y+1;
-            this.addSphereMap(ix,iy,iz);
+            this.addSphereMap(x,y+1,z);
         }
     }
 
     // 最近値マスを48個出力する
-    public ArrayList<Mass> getMass(){
+    public ArrayList<Mass> getMassList(){
         ArrayList<Mass> al = new ArrayList<>();
         int ix = this.currentMass.x;
         int iy = this.currentMass.y;
@@ -79,7 +70,7 @@ public class SphereMapGenerator {
     private void addSphereMap(int x,int y,int z){
         float key = (float)Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2));
         if (!sphereMap.containsKey(key)) {
-            sphereMap.put(key, new ArrayList<Mass>());
+            sphereMap.put(key, new ArrayList<>());
         }
         sphereMap.get(key).add(new Mass(x, y, z));
     }

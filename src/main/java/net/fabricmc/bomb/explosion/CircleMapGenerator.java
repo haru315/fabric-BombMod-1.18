@@ -23,16 +23,11 @@ public class CircleMapGenerator {
         int y = this.currentMass.y;
 
         // 新しいマス
-        int ix = 0;
-        int iy = 0;
         if (y == 0){
-            ix = x+1;
-            this.addCircleMap(ix,0);
+            this.addCircleMap(x+1,0);
         }
         if (x > y){
-            ix = x;
-            iy = y+1;
-            this.addCircleMap(ix,iy);
+            this.addCircleMap(x,y+1);
         }
     }
 

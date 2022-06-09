@@ -3,20 +3,30 @@ package net.fabricmc.bomb.entity.explosion;
 import net.fabricmc.bomb.BombMod;
 import net.fabricmc.bomb.explosion.CircleMapGenerator;
 import net.fabricmc.bomb.explosion.SphereMapGenerator;
+import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+
+import java.util.List;
 
 public class SphereExplosionEntity extends Entity {
 
-
-    public SphereMapGenerator sphereMG;
-    public int strength;
+    protected DamageSource damageSource;
+    protected SphereMapGenerator sphereMG;
+    protected int strength = 100;
 
     public SphereExplosionEntity(World world) {
         this(BombMod.SPHEREE_EXPLOSION_ENTITY, world);
@@ -32,6 +42,7 @@ public class SphereExplosionEntity extends Entity {
         this.prevX = x;
         this.prevY = y;
         this.prevZ = z;
+        this.damageSource = DamageSource.explosion((Explosion) null);
     }
 
     @Override
@@ -40,16 +51,23 @@ public class SphereExplosionEntity extends Entity {
             this.discard();
             return;
         }
-        for(int i=0;i<16;i++){
-            if (sphereMG.getSize() > 100){
+        for(int i=0;i<1;i++){
+            if (sphereMG.getSize() > this.strength){
                 this.discard();
                 return;
             }
             sphereMG.sizeUp();
 
-            for (SphereMapGenerator.Mass m : sphereMG.getMass()){
+            for (SphereMapGenerator.Mass m : sphereMG.getMassList()){
                 BlockPos blockPos3 = new BlockPos((int)this.prevX+m.x, (int)this.prevY+m.y, (int)this.prevZ+m.z);
-                world.setBlockState(blockPos3, Blocks.AIR.getDefaultState());
+
+                if(!world.isAir(blockPos3)){
+                    if (sphereMG.getSize() < this.strength -1 ){
+                        world.setBlockState(blockPos3, Blocks.AIR.getDefaultState(), Block.FORCE_STATE + Block.NOTIFY_LISTENERS);
+                    }else {
+                        world.setBlockState(blockPos3, Blocks.AIR.getDefaultState());
+                    }
+                }
             }
         }
     }

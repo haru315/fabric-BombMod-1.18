@@ -33,20 +33,14 @@ public class Tnt4xEntity  extends BombEntity {
 
     @Override
     protected void explode() {
-//        BigExplosion explosion = new BigExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
-//        explosion.ExplosionA();
+        BigExplosion explosion = new BigExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
+        explosion.ExplosionA();
 
 
-//        BigSphereExplosion explosion = new BigSphereExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size);
-//        explosion.ExplosionA();
-
-//        BigNukeExplosion explosion = new BigNukeExplosion(this.world,this,this.getX(),this.getY(),this.getZ(),this.size*10.0F,this.size);
-//        explosion.Explosion();
-
-        if (world.isClient) {
-            return;
-        }
-        SphereExplosionEntity entity = SphereExplosionEntity.statFac(world,this.getX(),this.getY()+250,this.getZ(),1000);
-        world.spawnEntity(entity);
+//        if (world.isClient) {
+//            return;
+//        }
+//        SphereExplosionEntity entity = SphereExplosionEntity.statFac(world,this.getX(),this.getY(),this.getZ(),100);
+//        world.spawnEntity(entity);
     }
 }
